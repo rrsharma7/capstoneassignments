@@ -36,12 +36,10 @@ public class HBaseWriter {
         TableName tname = TableName.valueOf(tableName);
         TableDescriptorBuilder tableDescBuilder = TableDescriptorBuilder.newBuilder(tname);
 
-        tableDescBuilder.setColumnFamily(ColumnFamilyDescriptorBuilder.newBuilder("Name".getBytes()).build())
-                .setColumnFamily(ColumnFamilyDescriptorBuilder.newBuilder("Age".getBytes()).build())
-                .setColumnFamily(ColumnFamilyDescriptorBuilder.newBuilder("Company".getBytes()).build())
-                .setColumnFamily(ColumnFamilyDescriptorBuilder.newBuilder("Building_code".getBytes()).build())
-                .setColumnFamily(ColumnFamilyDescriptorBuilder.newBuilder("Phone_Number".getBytes()).build())
-                .setColumnFamily(ColumnFamilyDescriptorBuilder.newBuilder("Address".getBytes()).build())
+        tableDescBuilder.setColumnFamily(ColumnFamilyDescriptorBuilder.newBuilder("building_code".getBytes()).build())
+                .setColumnFamily(ColumnFamilyDescriptorBuilder.newBuilder("total_floor".getBytes()).build())
+                .setColumnFamily(ColumnFamilyDescriptorBuilder.newBuilder("companies_in_the_building".getBytes()).build())
+                .setColumnFamily(ColumnFamilyDescriptorBuilder.newBuilder("cafeteria_code".getBytes()).build())
                 .build();
 
         hAdmin.createTable(tableDescBuilder.build());
@@ -49,15 +47,13 @@ public class HBaseWriter {
         System.out.println(tableName + " table crated");
 
     }
-
     private HashMap<Integer, String> getColumnMapping() {
         HashMap<Integer, String> hm = new HashMap<>();
-        hm.put(0, "Name");
-        hm.put(1, "Age");
-        hm.put(2, "Company");
-        hm.put(3, "Building_code");
-        hm.put(4, "Phone_Number");
-        hm.put(5, "Address");
+        hm.put(0, "building_code");
+        hm.put(1, "total_floor");
+        hm.put(2, "companies_in_the_building");
+        hm.put(3, "cafeteria_code");
+
         return hm;
     }
 
@@ -74,7 +70,7 @@ public class HBaseWriter {
             for(int i = 0; i < record.length; ++ i) {
                 String qualifier = hm.get(i);
                 if(qualifier != null)
-                    p.addColumn(Bytes.toBytes(Constants.columnFamily),
+                    p.addColumn(Bytes.toBytes("building_details"),
                             Bytes.toBytes(qualifier),
                             Bytes.toBytes(record[i]));
             }
